@@ -3,6 +3,10 @@ use std::sync::LazyLock;
 
 use crate::arch::software::{generate_table_u16, generate_table_u32, generate_table_u64};
 
+#[cfg(test)]
+#[path = "tables.rs"]
+mod prebuilt_tables;
+
 macro_rules! define_tables {
     ($module:ident, $word:ty, $generate:ident;
      $($name:ident => $algorithm:path),+;
@@ -24,12 +28,12 @@ macro_rules! define_tables {
             fn generated_tables_match_prebuilt() {
                 $(assert_eq!(
                     LazyLock::force(&$name).as_ref(),
-                    &crate::prebuilt_tables::$module::$name,
+                    &crate::tables::prebuilt_tables::$module::$name,
                     stringify!($name),
                 );)+
                 $(assert_eq!(
                     LazyLock::force(&$alias).as_ref(),
-                    &crate::prebuilt_tables::$module::$alias,
+                    &crate::tables::prebuilt_tables::$module::$alias,
                     stringify!($alias),
                 );)*
             }

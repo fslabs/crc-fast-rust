@@ -243,17 +243,11 @@ mod feature_detection;
 #[cfg(feature = "ffi")]
 mod ffi;
 mod generate;
-#[cfg(all(
-    test,
-    any(feature = "lazy-tables", all(target_arch = "wasm32", feature = "std"))
-))]
-#[path = "tables.rs"]
-mod prebuilt_tables;
 mod structs;
-#[cfg(not(any(feature = "lazy-tables", all(target_arch = "wasm32", feature = "std"))))]
-mod tables;
-#[cfg(any(feature = "lazy-tables", all(target_arch = "wasm32", feature = "std")))]
-#[path = "lazy_tables.rs"]
+#[cfg_attr(
+    any(feature = "lazy-tables", all(target_arch = "wasm32", feature = "std")),
+    path = "lazy_tables.rs"
+)]
 mod tables;
 mod test;
 mod traits;
